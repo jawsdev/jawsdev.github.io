@@ -16,97 +16,60 @@ const posts = (await getCollection('blog')).sort(
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
 	</head>
-	<body>
+	<body class="bg-gray-50 min-h-screen">
 		<Header />
-		<main>
+		<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+			<div class="text-center mb-12">
+				<h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Blog</h1>
+				<p class="text-xl text-gray-600 max-w-2xl mx-auto">
+					Thoughts, ideas, and insights from our journey
+				</p>
+			</div>
+
 			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
+				<div class="grid gap-8 md:gap-12">
+					{posts.map((post, index) => (
+						<article class={`${index === 0 ? 'md:col-span-2' : ''}`}>
+							<a href={`/blog/${post.id}/`} class="group block">
+								<div class={`bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden ${index === 0 ? 'md:flex md:items-center' : ''}`}>
 									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
+										<div class={`${index === 0 ? 'md:w-1/2 h-64 md:h-80' : 'h-48'} overflow-hidden`}>
+											<Image
+												width={720}
+												height={360}
+												src={post.data.heroImage}
+												alt=""
+												class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+											/>
+										</div>
 									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
+									<div class={`p-6 ${index === 0 && post.data.heroImage ? 'md:w-1/2' : ''}`}>
+										<div class="flex items-center mb-3">
+											<time class="text-sm text-gray-500 font-medium">
+												<FormattedDate date={post.data.pubDate} />
+											</time>
+										</div>
+										<h2 class={`font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-200 ${index === 0 ? 'text-2xl md:text-3xl mb-4' : 'text-xl mb-3'}`}>
+											{post.data.title}
+										</h2>
+										{post.data.description && (
+											<p class={`text-gray-600 ${index === 0 ? 'text-base' : 'text-sm'}`}>
+												{post.data.description}
+											</p>
+										)}
+									</div>
+								</div>
+							</a>
+						</article>
+					))}
+
+					{posts.length === 0 && (
+						<div class="text-center py-12">
+							<p class="text-gray-500 text-lg">No blog posts found.</p>
+						</div>
+					)}
+				</div>
 			</section>
 		</main>
 		<Footer />
