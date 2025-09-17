@@ -1,0 +1,74 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+
+type Props = CollectionEntry<'projects'>['data'];
+
+const { title, description, startDate, updatedDate, heroImage, status, technologies } = Astro.props;
+
+const statusColors = {
+	'planning': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+	'in-progress': 'bg-blue-100 text-blue-800 border-blue-200',
+	'completed': 'bg-green-100 text-green-800 border-green-200',
+	'on-hold': 'bg-gray-100 text-gray-800 border-gray-200'
+};
+---
+
+<BaseLayout title={title} description={description}>
+	<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			<article class="bg-white rounded-lg shadow-lg overflow-hidden">
+				{heroImage && (
+					<div class="w-full h-64 sm:h-80 lg:h-96 overflow-hidden">
+						<Image
+							width={1020}
+							height={510}
+							src={heroImage}
+							alt=""
+							class="w-full h-full object-cover"
+						/>
+					</div>
+				)}
+
+				<div class="px-6 sm:px-8 lg:px-12 py-8">
+					<header class="mb-8 text-center border-b border-gray-200 pb-8">
+						<div class="mb-4 flex items-center justify-center space-x-4">
+							<time class="text-sm text-gray-500 font-medium">
+								Started <FormattedDate date={startDate} />
+							</time>
+							<span class={`px-3 py-1 text-sm font-semibold rounded-full border ${statusColors[status]}`}>
+								{status.replace('-', ' ')}
+							</span>
+						</div>
+						{updatedDate && (
+							<div class="text-sm text-gray-400 italic mb-4">
+								Last updated on <FormattedDate date={updatedDate} />
+							</div>
+						)}
+						<h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
+							{title}
+						</h1>
+						{description && (
+							<p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed mb-6">
+								{description}
+							</p>
+						)}
+						{technologies && technologies.length > 0 && (
+							<div class="flex flex-wrap space-x-4 justify-center">
+								{technologies.map((tech) => (
+									<span class="px-3 py-1 text-sm bg-brand-primary text-white rounded-md">
+										{tech}
+									</span>
+								))}
+							</div>
+						)}
+					</header>
+
+					<div class="prose prose-lg prose-gray max-w-none prose-headings:text-gray-900 prose-headings:font-semibold prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-brand-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-code:text-pink-600 prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-blockquote:border-l-4 prose-blockquote:border-brand-accent prose-blockquote:bg-orange-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:italic prose-ul:text-gray-700 prose-ol:text-gray-700 prose-li:text-gray-700">
+						<slot />
+					</div>
+				</div>
+			</article>
+	</div>
+</BaseLayout>

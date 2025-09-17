@@ -1,0 +1,89 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+
+const projects = (await getCollection('projects')).sort(
+	(a, b) => b.data.startDate.valueOf() - a.data.startDate.valueOf(),
+);
+
+const statusColors = {
+	'planning': 'bg-yellow-100 text-yellow-800',
+	'in-progress': 'bg-blue-100 text-blue-800',
+	'completed': 'bg-green-100 text-green-800',
+	'on-hold': 'bg-gray-100 text-gray-800'
+};
+---
+
+<BaseLayout title={`Projects - ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
+	<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+			<div class="text-center mb-12">
+				<h1 class="text-4xl sm:text-5xl font-bold text-brand-primary mb-4">Projects</h1>
+				<p class="text-xl text-brand-primary max-w-2xl mx-auto">
+					Things I'm building, experimenting with, and learning from
+				</p>
+			</div>
+
+			<section>
+				<div class="grid gap-8 md:gap-12">
+					{projects.map((project, index) => (
+						<article class={`${index === 0 ? 'md:col-span-2' : ''}`}>
+							<a href={`/projects/${project.id}/`} class="group block">
+								<div class={`bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden ${index === 0 ? 'md:flex md:items-center' : ''}`}>
+									{project.data.heroImage && (
+										<div class={`${index === 0 ? 'md:w-1/2 h-64 md:h-80' : 'h-48'} overflow-hidden`}>
+											<Image
+												width={720}
+												height={360}
+												src={project.data.heroImage}
+												alt=""
+												class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+											/>
+										</div>
+									)}
+									<div class={`p-6 ${index === 0 && project.data.heroImage ? 'md:w-1/2' : ''}`}>
+										<div class="flex items-center justify-between mb-3">
+											<div class="flex items-center space-x-3">
+												<time class="text-sm text-gray-500 font-medium">
+													Started <FormattedDate date={project.data.startDate} />
+												</time>
+												<span class={`px-2 py-1 text-xs font-semibold rounded-full ${statusColors[project.data.status]}`}>
+													{project.data.status.replace('-', ' ')}
+												</span>
+											</div>
+										</div>
+										<h2 class={`font-bold text-gray-900 group-hover:text-brand-accent transition-colors duration-200 ${index === 0 ? 'text-2xl md:text-3xl mb-4' : 'text-xl mb-3'}`}>
+											{project.data.title}
+										</h2>
+										{project.data.description && (
+											<p class={`text-gray-600 mb-3 ${index === 0 ? 'text-base' : 'text-sm'}`}>
+												{project.data.description}
+											</p>
+										)}
+										{project.data.technologies && project.data.technologies.length > 0 && (
+											<div class="flex flex-wrap space-x-4">
+												{project.data.technologies.map((tech) => (
+													<span class="px-3 py-1 text-xs bg-brand-primary text-white rounded">
+														{tech}
+													</span>
+												))}
+											</div>
+										)}
+									</div>
+								</div>
+							</a>
+						</article>
+					))}
+
+					{projects.length === 0 && (
+						<div class="text-center py-12">
+							<p class="text-gray-500 text-lg">No projects found.</p>
+							<p class="text-gray-400 text-sm mt-2">Check back soon for updates!</p>
+						</div>
+					)}
+				</div>
+			</section>
+	</div>
+</BaseLayout>

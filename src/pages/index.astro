@@ -1,26 +1,21 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body class="bg-gray-50 min-h-screen">
-		<Header />
-		<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 			<div class="text-center mb-12">
 				<h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-primary mb-6">
-                    Hello, Astronaut!
+                    Welcome to My Development Blog
 				</h1>
 				<p class="text-xl text-brand-primary max-w-3xl mx-auto leading-relaxed">
-					Welcome to the official <a href="https://astro.build/" class="text-brand-accent hover:text-brand-primary underline">Astro</a> blog starter template. This
-					template serves as a lightweight, minimally-styled starting point for anyone looking to build
-					a personal website, blog, or portfolio with Astro.
+					Hey there! This is where I write about coding experiments in my
+					<a href="/blog" class="text-brand-accent font-semibold hover:underline">blog</a>, showcase what I'm building in my
+					<a href="/projects" class="text-brand-accent font-semibold hover:underline">projects</a>, and maybe share some
+					retro tech adventures and music too.
+					Just sharing what I'm building and learning along the way. Want to know more
+					<a href="/about" class="text-brand-accent font-semibold hover:underline">about me</a>?
 				</p>
 			</div>
 
@@ -75,7 +70,5 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 					</p>
 				</div>
 			</div>
-		</main>
-		<Footer />
-	</body>
-</html>
+	</div>
+</BaseLayout>
