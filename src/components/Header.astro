@@ -19,7 +19,7 @@ const isHome = pathname === '/' || pathname === '';
 
             <!-- Navigation Links -->
             <div class="flex space-x-2 sm:space-x-8">
-                {!isHome && <HeaderLink href="/">Home</HeaderLink>}
+                <HeaderLink href="/" class="hidden sm:block">Home</HeaderLink>
                 <HeaderLink href="/blog">Blog</HeaderLink>
                 <HeaderLink href="/projects">Projects</HeaderLink>
                 <HeaderLink href="/about">About</HeaderLink>
