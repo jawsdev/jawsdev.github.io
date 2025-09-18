@@ -7,6 +7,12 @@ import FormattedDate from '../components/FormattedDate.astro';
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+
+// Get the current blog post slug from the URL to find the matching file
+const currentSlug = Astro.url.pathname.split('/').filter(Boolean).pop();
+const blogFiles = await Astro.glob('../content/blog/*.{md,mdx}');
+const currentFile = blogFiles.find(file => file.url?.includes(currentSlug || ''));
+const project = currentFile?.frontmatter?.project;
 ---
 
 <BaseLayout title={title} description={description}>
@@ -26,16 +32,27 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 
 				<div class="px-6 sm:px-8 lg:px-12 py-8">
 					<header class="mb-8 text-center border-b border-gray-200 pb-8">
-						<div class="mb-4">
+						<div class="mb-4 flex items-center justify-center gap-4 flex-wrap">
 							<time class="text-sm text-gray-500 font-medium">
 								<FormattedDate date={pubDate} />
 							</time>
-							{updatedDate && (
-								<div class="text-sm text-gray-400 italic mt-1">
-									Last updated on <FormattedDate date={updatedDate} />
-								</div>
+							{project && (
+								<a
+									href={`/projects/${project}/`}
+									class="inline-flex items-center px-3 py-1 text-sm font-medium bg-brand-primary text-white rounded-full hover:bg-brand-primary/90 transition-colors"
+								>
+									<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+									</svg>
+									Project: {project.charAt(0).toUpperCase() + project.slice(1).replace('-', ' ')}
+								</a>
 							)}
 						</div>
+						{updatedDate && (
+							<div class="text-sm text-gray-400 italic mt-1">
+								Last updated on <FormattedDate date={updatedDate} />
+							</div>
+						)}
 						<h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
 							{title}
 						</h1>

@@ -8,70 +8,76 @@ import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+console.log('Posts with project field:', posts.map(p => ({ title: p.data.title, project: p.data.project })));
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body class="bg-gray-50 min-h-screen">
-		<Header />
-		<main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-			<div class="text-center mb-12">
-				<h1 class="text-4xl sm:text-5xl font-bold text-brand-primary mb-4">Blog</h1>
-				<p class="text-xl text-gray-600 max-w-2xl mx-auto">
-					Thoughts, ideas, and insights from our journey
-				</p>
-			</div>
+    <head>
+        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    </head>
+    <body class="bg-gray-50 min-h-screen">
+        <Header />
+        <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl sm:text-5xl font-bold text-brand-primary mb-4">Blog</h1>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Thoughts, ideas, and insights from our journey
+                </p>
+            </div>
 
-			<section>
-				<div class="grid gap-8 md:gap-12">
-					{posts.map((post, index) => (
-						<article class={`${index === 0 ? 'md:col-span-2' : ''}`}>
-							<a href={`/blog/${post.id}/`} class="group block">
-								<div class={`bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden ${index === 0 ? 'md:flex md:items-center' : ''}`}>
-									{post.data.heroImage && (
-										<div class={`${index === 0 ? 'md:w-1/2 h-64 md:h-80' : 'h-48'} overflow-hidden`}>
-											<Image
-												width={720}
-												height={360}
-												src={post.data.heroImage}
-												alt=""
-												class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-											/>
-										</div>
-									)}
-									<div class={`p-6 ${index === 0 && post.data.heroImage ? 'md:w-1/2' : ''}`}>
-										<div class="flex items-center mb-3">
-											<time class="text-sm text-gray-500 font-medium">
-												<FormattedDate date={post.data.pubDate} />
-											</time>
-										</div>
-										<h2 class={`font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-200 ${index === 0 ? 'text-2xl md:text-3xl mb-4' : 'text-xl mb-3'}`}>
-											{post.data.title}
-										</h2>
-										{post.data.description && (
-											<p class={`text-gray-600 ${index === 0 ? 'text-base' : 'text-sm'}`}>
-												{post.data.description}
-											</p>
-										)}
-									</div>
-								</div>
-							</a>
-						</article>
-					))}
+            <section>
+                <div class="grid gap-8 md:gap-12">
+                    {posts.map((post, index) => (
+                        <article class={`${index === 0 ? 'md:col-span-2' : ''}`}>
+                            <a href={`/blog/${post.id}/`} class="group block">
+                                <div class={`bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden ${index === 0 ? 'md:flex md:items-center' : ''}`}>
+                                    {post.data.heroImage && (
+                                        <div class={`${index === 0 ? 'md:w-1/2 h-64 md:h-80' : 'h-48'} overflow-hidden`}>
+                                            <Image
+                                                width={720}
+                                                height={360}
+                                                src={post.data.heroImage}
+                                                alt=""
+                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                            />
+                                        </div>
+                                    )}
+                                    <div class={`p-6 ${index === 0 && post.data.heroImage ? 'md:w-1/2' : ''}`}>
+                                        <div class="flex items-center mb-3 space-x-3">
+                                            <time class="text-sm text-gray-500 font-medium">
+                                                <FormattedDate date={post.data.pubDate} />
+                                            </time>
+                                            {post.data.project && (
+                                                <span class="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
+                                                    {post.data.project}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <h2 class={`font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-200 ${index === 0 ? 'text-2xl md:text-3xl mb-4' : 'text-xl mb-3'}`}>
+                                            {post.data.title}
+                                        </h2>
+                                        {post.data.description && (
+                                            <p class={`text-gray-600 ${index === 0 ? 'text-base' : 'text-sm'}`}>
+                                                {post.data.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                    ))}
 
-					{posts.length === 0 && (
-						<div class="text-center py-12">
-							<p class="text-gray-500 text-lg">No blog posts found.</p>
-						</div>
-					)}
-				</div>
-			</section>
-		</main>
-		<Footer />
-	</body>
+                    {posts.length === 0 && (
+                        <div class="text-center py-12">
+                            <p class="text-gray-500 text-lg">No blog posts found.</p>
+                        </div>
+                    )}
+                </div>
+            </section>
+        </main>
+        <Footer />
+    </body>
 </html>
